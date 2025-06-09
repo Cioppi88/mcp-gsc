@@ -259,10 +259,11 @@ async def mcp_sse_endpoint(request: Request):
                 await asyncio.sleep(30)
                 
         except asyncio.CancelledError:
-            break
+            return
         except Exception as e:
             logger.error(f"Errore SSE stream: {e}")
             yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+            return
 
     return StreamingResponse(
         generate_sse_stream(),
